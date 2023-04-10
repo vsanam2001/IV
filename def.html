@@ -1,0 +1,160 @@
+
+  <!DOCTYPE html>
+
+  <html>
+
+    <head>
+
+      <title>D3.js Scatter Plot </title>
+
+      <script src="https://d3js.org/d3.v7.min.js"></script>
+
+      <style>
+
+        .tooltip {
+
+          position: absolute;
+
+          padding: 5px;
+
+          background-color: #fff;
+
+          border: 1px solid #ccc;
+
+          pointer-events: none;
+
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>D3.js Scatter Plot </h1>
+
+      <div id="scatter-plot"></div>
+
+      <div class="tooltip"></div>
+
+      <script>
+
+        // Define the data
+
+        var data = [
+
+          { x: 15, y: 20 },
+
+          { x: 20, y: 26 },
+
+          { x: 26, y:30 },
+
+          { x: 30, y: 35 },
+
+          { x: 35, y: 50 }
+
+        ];
+
+
+        // Set up the SVG element
+
+        var svg = d3.select("#scatter-plot")
+
+          .append("svg")
+
+          .attr("width", 500)
+
+          .attr("height", 300);
+
+
+        // Define the x scale
+
+        var xScale = d3.scaleLinear()
+
+          .domain([0, d3.max(data, function(d) { return d.x; })])
+
+          .range([50, 450]);
+
+
+        // Define the y scale
+
+        var yScale = d3.scaleLinear()
+
+          .domain([0, d3.max(data, function(d) { return d.y; })])
+
+          .range([250, 50]);
+
+
+        // Create the circle
+
+        svg.selectAll("circle")
+
+          .data(data)
+
+          .enter()
+
+          .append("circle")
+
+          .attr("cx", function(d) { return xScale(d.x); })
+
+          .attr("cy", function(d) { return yScale(d.y); })
+
+          .attr("r", 5)
+
+          .attr("fill", "steelGreens")
+
+          .on("mouseover", function(d) {
+
+            var tooltip = d3.select(".tooltip");
+
+            tooltip.style("visibility", "visible")
+
+              .text("(" + d.x + ", " + d.y + ")")
+
+              .style("left", (d3.event.pageX + 10) + "px")
+
+              .style("top", (d3.event.pageY + 10) + "px");
+
+          })
+
+          .on("mousemove", function(d) {
+
+            var tooltip = d3.select(".tooltip");
+
+            tooltip.style("left", (d3.event.pageX + 10) + "px")
+
+              .style("top", (d3.event.pageY + 10) + "px");
+
+          })
+
+          .on("mouseout", function(d) {
+
+            var tooltip = d3.select(".tooltip");
+
+            tooltip.style("visibility", "hidden");
+
+          });
+
+
+        // Add the x axis
+
+        svg.append("g")
+
+          .attr("transform", "translate(0,250)")
+
+          .call(d3.axisBottom(xScale));
+
+
+        // Add the y axis
+
+        svg.append("g")
+
+          .attr("transform", "translate(50,0)")
+
+          .call(d3.axisLeft(yScale));
+
+      </script>
+
+    </body>
+
+  </html>
